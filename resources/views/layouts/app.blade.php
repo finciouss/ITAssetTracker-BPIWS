@@ -9,7 +9,6 @@
 
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Tom Select CSS (CDN) -->
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">

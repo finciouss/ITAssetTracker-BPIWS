@@ -235,11 +235,11 @@ class AllocationController extends Controller
 
         $target = [];
         if ($validated['project_id']) {
-            $prj = \App\Models\Project::find($validated['project_id']);
+            $prj = Project::find($validated['project_id']);
             if ($prj) $target[] = 'Project ' . $prj->project_name;
         }
         if ($validated['employee_id']) {
-            $emp = \App\Models\Employee::find($validated['employee_id']);
+            $emp = Employee::find($validated['employee_id']);
             if ($emp) $target[] = 'Employee ' . $emp->first_name;
         }
         $targetStr = implode(' and ', $target);
@@ -332,11 +332,11 @@ class AllocationController extends Controller
 
         $target = [];
         if ($validated['project_id']) {
-            $prj = \App\Models\Project::find($validated['project_id']);
+            $prj = Project::find($validated['project_id']);
             if ($prj) $target[] = 'Project ' . $prj->project_name;
         }
         if ($validated['employee_id']) {
-            $emp = \App\Models\Employee::find($validated['employee_id']);
+            $emp = Employee::find($validated['employee_id']);
             if ($emp) $target[] = 'Employee ' . $emp->first_name;
         }
         $targetStr = implode(' and ', $target);

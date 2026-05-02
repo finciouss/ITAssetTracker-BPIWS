@@ -11,13 +11,33 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 
-// ── Auth ────────────────────────────────────────────────────────────────────
+// ── Health check — no auth, used by Railway uptime monitoring ───────────────
+Route::get('/health', function () {
+    try {
+        \DB::connection()->getPdo();
+        return response()->json([
+            'status'    => 'ok',
+            'app'       => config('app.name'),
+            'env'       => config('app.env'),
+            'db'        => 'connected',
+            'timestamp' => now()->toIso8601String(),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'db'     => 'unreachable',
+            'error'  => $e->getMessage(),
+        ], 503);
+    }
+})->name('health');
+
+// ── Auth ─────────────────────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
-    Route::get('/login',    [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login',   [LoginController::class, 'login']);
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register',[RegisterController::class, 'register']);
+    Route::get('/login',  [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+    // /register is disabled — accounts are created by Admin via /users/create
 });
+
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 

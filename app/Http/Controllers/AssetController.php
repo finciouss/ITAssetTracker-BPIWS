@@ -139,6 +139,7 @@ class AssetController extends Controller
         // Since ExcelTemplate is limited, use direct sheet access via the helper
         // For now map: B=No, C=TagNo, E=Name, F=Category, H=Stock info string
         $no = 1;
+        /** @var Asset $asset */
         foreach ($assets as $asset) {
             $avail = $asset->availableStock();
             $alloc = $asset->allocatedQuantity();

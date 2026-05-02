@@ -6,6 +6,46 @@
     <p class="page-subtitle text-slate-500">Overview of IT asset metrics and recent activity.</p>
 </div>
 
+{{-- ── Overdue Allocation Banner ───────────────────────────────────────────── --}}
+@hasrole('Admin|Staff')
+@if($overdueAllocations->isNotEmpty())
+<div class="mb-6 rounded-[16px] border border-red-200 bg-red-50 overflow-hidden shadow-sm">
+    <div class="px-5 py-4 flex items-start gap-3">
+        <div class="shrink-0 mt-0.5">
+            <svg class="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+            <p class="text-sm font-semibold text-red-800">
+                {{ $overdueAllocations->count() }} allocation(s) are overdue — expected return date has passed.
+            </p>
+            <ul class="mt-3 space-y-2">
+                @foreach($overdueAllocations as $alloc)
+                <li class="flex items-center justify-between gap-4 text-sm">
+                    <div class="min-w-0">
+                        <span class="font-medium text-red-900">{{ $alloc->asset->tag_number ?? 'N/A' }}</span>
+                        <span class="text-red-700"> — {{ $alloc->asset->name ?? 'Unknown' }}</span>
+                        <span class="text-red-500 text-xs ml-2">
+                            Due: {{ $alloc->expected_return_date->format('d M Y') }}
+                            &middot;
+                            {{ $alloc->employee?->name ?? $alloc->project?->project_name ?? 'Unknown' }}
+                        </span>
+                    </div>
+                    <a href="{{ route('allocations.return', $alloc) }}"
+                       class="shrink-0 text-xs font-semibold text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg transition-colors">
+                        Process Return
+                    </a>
+                </li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+</div>
+@endif
+@endhasrole
+
 <!-- Key Metrics Cards -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <a href="{{ route('assets.index') }}" class="block bg-white rounded-[20px] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-200/60 ring-1 ring-slate-900/5 transition-all duration-300 hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 p-6 flex items-start gap-4 hover:shadow-md transition-shadow">
@@ -53,7 +93,7 @@
         </div>
         <div>
             <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Overdue Alerts</p>
-            <h3 class="text-2xl font-bold text-slate-900">{{ $overdueAllocations }}</h3>
+            <h3 class="text-2xl font-bold text-slate-900">{{ $overdueAllocations->count() }}</h3>
         </div>
     </a>
     @endhasrole
